@@ -32,7 +32,7 @@ namespace Datagrid
 			set
 			{
 				txtCena = value;
-				PromenaC?.Invoke(txtCena);
+				PromenaC?.Invoke(this, new PromeniCenuArgs(txtCena));
 			}
 		}
 
@@ -77,9 +77,17 @@ namespace Datagrid
 			}
 		}
 
-		public delegate void PC(decimal novaCena);
-		public event PC PromenaC; 
+		public delegate void PromeniCenuHandler(object posiljaoc, PromeniCenuArgs pca);
+		public event PromeniCenuHandler PromenaC; 
+	}
 
+	public class PromeniCenuArgs
+	{
+		public decimal Cena;
+		public PromeniCenuArgs(decimal d)
+		{
+			Cena = d;
+		}
 	}
 
 	public class Artikal : INotifyPropertyChanged
@@ -108,9 +116,9 @@ namespace Datagrid
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		public void PromeniCenu(decimal x)
+		public void PromeniCenu(object koSalje, PromeniCenuArgs argumenti)
 		{
-			Cena = x;
+			Cena = argumenti.Cena;
 		}
 	}
 
