@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,11 +25,21 @@ namespace Datagrid
 	{
 		ObservableCollection<Artikal> lArt = new ObservableCollection<Artikal>();
 
+		private decimal txtCena;
+		public decimal TxtCena 
+		{
+			get => txtCena; 
+			set
+			{
+				txtCena = value;
+				PromenaC?.Invoke(txtCena);
+			}
+		}
 
 		public MainWindow()
 		{
 			InitializeComponent();
-
+			DataContext = this;
 			/*Artikal a = new Artikal();
 			a.Naziv = "Nesto";
 			a.Cena = 5;
@@ -47,16 +58,44 @@ namespace Datagrid
 			lArt.Add(new Artikal("Plazam", 200));
 		}
 
-		private void Cekirano(object sender, RoutedEventArgs e)
+		private void Brisanje(object sender, RoutedEventArgs e)
 		{
-			lArt.Remove((sender as Button).DataContext as Artikal);
+			if (!lArt.Remove((sender as Button).DataContext as Artikal))
+				MessageBox.Show("Brisanje nije moguce!");
 		}
+
+		private void ToggleKlik(object sender, RoutedEventArgs e)
+		{
+			ToggleButton tb = sender as ToggleButton;
+
+			if (tb.IsChecked == true)
+			{
+				PromenaC += (tb.DataContext as Artikal).PromeniCenu;
+			} else
+			{
+				PromenaC -= (tb.DataContext as Artikal).PromeniCenu;
+			}
+		}
+
+		public delegate void PC(decimal novaCena);
+		public event PC PromenaC; 
+
 	}
 
-	public class Artikal
+	public class Artikal : INotifyPropertyChanged
 	{
 		public string Naziv { get; set; }
-		public decimal Cena { get; set; }
+
+		private decimal cena;
+		public decimal Cena 
+		{
+			get => cena;
+			set
+			{
+				cena = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Cena"));
+			}
+		}
 		public bool Selektovan { get; set; }
 		
 		public Artikal(string n, decimal c)
@@ -66,6 +105,13 @@ namespace Datagrid
 		}
 
 		public Artikal() { }
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		public void PromeniCenu(decimal x)
+		{
+			Cena = x;
+		}
 	}
 
 }

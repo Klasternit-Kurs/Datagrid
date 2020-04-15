@@ -10,14 +10,26 @@
 		<StackPanel DockPanel.Dock="Top">
 			<Button FontSize="24" Content="Dugme"/>
 			<ToggleButton Content="ToggleDugme" FontSize="24"/>
+			<CheckBox IsThreeState="True"/>
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+				<Label Content="Cena: "/>
+				<TextBox Text="{Binding TxtCena, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
+			</StackPanel>
 		</StackPanel>
 		<DataGrid Name="dg" AutoGenerateColumns="False">
 			<DataGrid.Columns>
 				<DataGridTextColumn Header="Naziv" Binding="{Binding Naziv}"/>
-				<DataGridTemplateColumn Header="Moj togglebutton :)">
+				<DataGridTemplateColumn Header="Selekcija">
 					<DataGridTemplateColumn.CellTemplate>
 						<DataTemplate>
-							<Button Content="{Binding Cena}"  Click="Cekirano"/>
+							<ToggleButton Content="{Binding Cena}" IsChecked="{Binding Selektovan}" Click="ToggleKlik" IsThreeState="False"/>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+				<DataGridTemplateColumn>
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<Button Content="Obrisi"  Click="Brisanje"/>
 						</DataTemplate>
 					</DataGridTemplateColumn.CellTemplate>
 				</DataGridTemplateColumn>
